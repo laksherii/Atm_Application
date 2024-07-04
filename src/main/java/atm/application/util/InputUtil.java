@@ -57,11 +57,15 @@ public class InputUtil {
 
         BigDecimal desiredAmount;
         try {
-            desiredAmount = BigDecimal.valueOf(Double.parseDouble(SCANNER.next()));
+            double inputDesiredAmount = Double.parseDouble(SCANNER.next());
+            if (inputDesiredAmount > 500_000) {
+                throw new InputException(400, "Сумма превышает лимит выдачи средств банкомата. Попробуйте ввести другую сумму");
+            }
+            desiredAmount = BigDecimal.valueOf(inputDesiredAmount);
         } catch (NumberFormatException numberFormatException) {
             throw new InputException(400, "Невалидная сумма. Попробуйте снова.");
         }
-        
+
         boolean isDesiredAmountValid = CARD_VALIDATOR.isCardBalanceValidForWithdrawMoney(card.getBalance(), desiredAmount);
         if (isDesiredAmountValid) {
             return desiredAmount;
@@ -74,7 +78,11 @@ public class InputUtil {
         System.out.println("Введите сумму, которую хотите внести");
 
         try {
-            return BigDecimal.valueOf(Double.parseDouble(SCANNER.next()));
+            double inputDepositAmount = Double.parseDouble(SCANNER.next());
+            if (inputDepositAmount > 1_000_000) {
+                throw new InputException(400, "Сумма превышает лимит банкомата. Попробуйте снова.");
+            }
+            return BigDecimal.valueOf(inputDepositAmount );
         } catch (NumberFormatException numberFormatException) {
             throw new InputException(400, "Невалидная сумма. Попробуйте снова.");
         }
